@@ -66,7 +66,7 @@ internal class SecureDFUPacket: DFUCharacteristic {
             #else
             let peripheral = characteristic.service.peripheral
             #endif
-            // Make the packet size the first word-aligned value that's less than the maximum
+            // Level changes to iOS DFU framework: Make the packet size the first word-aligned value that's less than the maximum
             packetSize = UInt32(peripheral.maximumWriteValueLength(for: .withoutResponse)) & 0xFFFC
             if packetSize > 20 {
                 // MTU is 3 bytes larger than payload
