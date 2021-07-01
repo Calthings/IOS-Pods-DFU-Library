@@ -66,8 +66,8 @@ internal class SecureDFUPacket: DFUCharacteristic {
             #else
             let peripheral = characteristic.service.peripheral
             #endif
-            // Make the packet size the first word-aligned value that's less than the maximum.
-            packetSize = UInt32(peripheral.maximumWriteValueLength(for: .withoutResponse)) & 0xFFFFFFFC
+            // Level changes to iOS DFU framework: Make the packet size the first word-aligned value that's less than the maximum
+            packetSize = UInt32(peripheral.maximumWriteValueLength(for: .withoutResponse)) & 0xFFFC
             if packetSize > 20 {
                 // MTU is 3 bytes larger than payload
                 // (1 octet for Op-Code and 2 octets for Att Handle).
@@ -96,7 +96,7 @@ internal class SecureDFUPacket: DFUCharacteristic {
         #else
         let peripheral = characteristic.service.peripheral
         #endif
-        
+
         // Data may be sent in up-to-20-bytes packets.
         var offset: UInt32 = 0
         var bytesToSend = UInt32(data.count)
@@ -126,7 +126,7 @@ internal class SecureDFUPacket: DFUCharacteristic {
        - progress: An optional progress delegate.
        - queue:    The queue to dispatch progress events on.
        - complete: The completon callback.
-       - report:   Method called in case of an error.       
+       - report:   Method called in case of an error.
      */
     func sendNext(_ prnValue: UInt16, packetsFrom range: Range<Int>, of firmware: DFUFirmware,
                   andReportProgressTo progress: DFUProgressDelegate?, on queue: DispatchQueue,
@@ -140,7 +140,7 @@ internal class SecureDFUPacket: DFUCharacteristic {
         #else
         let peripheral = characteristic.service.peripheral
         #endif
-        
+
         let objectData          = firmware.data.subdata(in: range)
         let objectSizeInBytes   = UInt32(objectData.count)
         let objectSizeInPackets = (objectSizeInBytes + packetSize - 1) / packetSize
