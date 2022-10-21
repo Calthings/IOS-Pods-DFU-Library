@@ -83,16 +83,16 @@ class DfuViewModel : ObservableObject, DFUProgressDelegate, DFUServiceDelegate {
     }
     
     func onFileSelected(selected file: ZipFile) throws {
-        let selectedFirmware = DFUFirmware(
+        let selectedFirmware = try DFUFirmware(
             urlToZipFile: file.url,
             type: DFUFirmwareType.softdeviceBootloaderApplication
         )
         
-         guard let _ = selectedFirmware else {
-            fileError = DfuStrings.fileError.text
-            zipFile = nil
-            return
-        }
+//         guard let _ = selectedFirmware else {
+//            fileError = DfuStrings.fileError.text
+//            zipFile = nil
+//            return
+//        }
         zipFile = file
     }
     
@@ -101,15 +101,15 @@ class DfuViewModel : ObservableObject, DFUProgressDelegate, DFUServiceDelegate {
         print(device ?? "null")
         os_log("%@", zipFile.debugDescription)
 
-        let selectedFirmware = DFUFirmware(
+        let selectedFirmware = try! DFUFirmware(
             urlToZipFile: zipFile!.url,
             type: DFUFirmwareType.softdeviceBootloaderApplication
         )
         
-        guard let selectedFirmware = selectedFirmware else {
-            fileError = DfuStrings.fileError.text
-            return
-        }
+//        guard let selectedFirmware = selectedFirmware else {
+//            fileError = DfuStrings.fileError.text
+//            return
+//        }
         
         let initiator = DFUServiceInitiator().with(firmware: selectedFirmware)
 

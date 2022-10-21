@@ -195,12 +195,13 @@ internal class SecureDFUPeripheral : BaseCommonDFUPeripheral<SecureDFUExecutor, 
                     self.throwErrorIfNotChecksumResponse(response)
                     return
                 }
-                guard response.maxSize! > 0 else {
-                    self.logger.e("Invalid Command Object Max size = 0 received (expected > 0, typically 256 bytes)")
-                    self.delegate?.error(.unsupportedResponse,
-                                         didOccurWithMessage: "Received max object size = 0, expected 256")
-                    return
-                }
+                // Level changes to iOS DFU framework: Allow max size to be 0
+                // guard response.maxSize! > 0 else {
+                //     self.logger.e("Invalid Command Object Max size = 0 received (expected > 0, typically 256 bytes)")
+                //     self.delegate?.error(.unsupportedResponse,
+                //                          didOccurWithMessage: "Received max object size = 0, expected 256")
+                //     return
+                // }
                 self.delegate?.peripheralDidSendCommandObjectInfo(maxLen: response.maxSize!,
                                                                   offset: response.offset!,
                                                                   crc: response.crc!)
